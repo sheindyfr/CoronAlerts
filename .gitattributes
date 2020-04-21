@@ -1,3 +1,2 @@
-* linguist-vendored
 *.c linguist-vendored=false
 *.py linguist-detectable=true
