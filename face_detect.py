@@ -5,7 +5,7 @@ import distance
 
 class FaceDetect:
     face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_frontalface_default.xml')
-
+    font = cv2.FONT_HERSHEY_TRIPLEX
     def __init__(self):
         self.rec = []
         self.x_points = []
@@ -19,7 +19,7 @@ class FaceDetect:
         else:
             cap = cv2.VideoCapture(file_name)
 
-        font = cv2.FONT_HERSHEY_TRIPLEX
+
         cnt = 0
         _, img = cap.read()
         gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
@@ -32,6 +32,7 @@ class FaceDetect:
         focal_length = (marker[2] * known_dis) / distance.KNOWN_WIDTH
         print("known_dis:", known_dis, marker)
 
+
         while True:
             _, img = cap.read()
             cnt += 1
@@ -42,8 +43,8 @@ class FaceDetect:
             i = 1
             for (x, y, w, h) in faces:
 
-                cv2.rectangle(img, (x, y), (x + w, y + h), self.colors[i-1], 4)
-                cv2.putText(img, str(i), (int(x), y), font, 1, (0, 0, 255), 2)
+                cv2.rectangle(img, (x, y), (x + w, y + h), (255, 0, 0), 4)
+                cv2.putText(img, str(i), (int(x), y), self.font, 1, (0, 0, 255), 2)
                 dis = distance.distance_to_camera(focal_length, w)
                 print(dis)
                 i += 1
@@ -52,9 +53,9 @@ class FaceDetect:
                 cv2.rectangle(img, (9+i, 401), (9+i + (60*(i-1)), 449), color, -1)
 
             if len(faces) > 10:
-                cv2.putText(img, 'WARNING! The police is coming...', (10, 50), font, 1, (0, 0, 255), 2)
+                cv2.putText(img, 'WARNING! More than 10 people', (10, 50), self.font, 0.8, (0, 0, 255), 2)
 
-            img = self.draw_dis(img, faces)
+            img = self.calc_dis(img, faces, focal_length)
             cv2.imshow('img', img)
 
             # Stop if escape key is pressed
@@ -72,14 +73,20 @@ class FaceDetect:
             c = random.randint(0, 255)
             self.colors.append((a, b, c))
 
-    @staticmethod
-    def draw_dis(img, faces):
+    def calc_dis(self, img, faces, focal_length):
         for i in range(len(faces) - 1):
             x = faces[i][0]
             y = faces[i][1]
             w = faces[i][2]
             h = faces[i][3]
-            dis = faces[i+1][0] - (x + h)
-            cv2.line(img, (x + w, int(y + h/2)), (x + w + dis, int(y + h/2)), (0, 255, 0), 2)
+            dis0 = faces[i+1][0] - (x + h)
+            height, width = img.shape[:2]
+            dis1 = distance.distance_to_camera(focal_length, faces[i][2])
+            dis2 = distance.distance_to_camera(focal_length, faces[i + 1][2])
+            dis3 = distance.distance_between_obj(faces[i], faces[i + 1], dis1, dis2, (height, width))
+            print(dis3)
+            if dis3 < 200:
+                cv2.putText(img, 'WARNING! Keep 2 meters...', (10, 50), self.font, 0.8, (0, 0, 255), 2)
+            cv2.line(img, (x + w, int(y + h/2)), (x + w + dis0, int(faces[i+1][1] + h/2)), (0, 255, 0), 2)
+            cv2.putText(img, str(round((dis3 / 100), 2)) + "m", (int(x + w + dis0/2), int(y + h/2)), self.font, 0.5, (0, 0, 255), 2)
         return img
-
