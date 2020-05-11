@@ -23,26 +23,18 @@ def angle(vector1, vector2):
 
 
 def find_vectors(pnt1, pnt2, dis1, dis2, screen):
-    print("pnt1", pnt1)
-    print("pnt2", pnt2)
     centerX = screen[0]
-    centerY = screen[1]
-    print("center", centerX, centerY)
-    y1 = math.sqrt(cm_to_pixel(dis1) ** 2 - (pnt1[0] - centerX) ** 2)
-    y2 = math.sqrt(cm_to_pixel(dis2) ** 2 - (pnt2[0] - centerX) ** 2)
+    y1 = math.sqrt(abs(cm_to_pixel(dis1) ** 2 - (pnt1[0] - centerX) ** 2))
+    y2 = math.sqrt(abs(cm_to_pixel(dis2) ** 2 - (pnt2[0] - centerX) ** 2))
     vector1 = [pnt1[0] - centerX, y1]
     vector2 = [pnt2[0] - centerX, y2]
-    print("v1", vector1)
-    print("v2", vector2)
     return angle(vector1, vector2)
 
 
 def distance_between_obj(pnt1, pnt2, dis1, dis2, screen):
     mid_screen = (screen[0] / 2, screen[1] / 2)
     angle = find_vectors(pnt1, pnt2, dis1, dis2, mid_screen)
-    print("ang", angle)
-    print("cos", math.cos(angle))
-    dis3 = math.sqrt(dis1 ** 2 + dis2 ** 2 - 2 * dis1 * dis2 * math.cos(angle))
+    dis3 = math.sqrt(abs(dis1 ** 2 + dis2 ** 2 - 2 * dis1 * dis2 * math.cos(angle)))
     print("dis", dis3)
     return dis3
 

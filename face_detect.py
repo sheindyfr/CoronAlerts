@@ -43,14 +43,15 @@ class FaceDetect:
             i = 1
             for (x, y, w, h) in faces:
 
-                cv2.rectangle(img, (x, y), (x + w, y + h), (255, 0, 0), 4)
-                cv2.putText(img, str(i), (int(x), y), self.font, 1, (0, 0, 255), 2)
+                cv2.rectangle(img, (x, y), (x + w, y + h), (0, 0, 255), 2)
+                cv2.putText(img, str(i), (int(x), y), self.font, 0.5, (255, 0, 0), 0)
+
                 dis = distance.distance_to_camera(focal_length, w)
                 print(dis)
                 i += 1
-                color = (0, 0, 255)
-                cv2.rectangle(img, (10, 400), (620, 450), color, 4)
-                cv2.rectangle(img, (9+i, 401), (9+i + (60*(i-1)), 449), color, -1)
+                # color = (0, 0, 255)
+                # cv2.rectangle(img, (10, 400), (620, 450), color, 4)
+                # cv2.rectangle(img, (9+i, 401), (9+i + (60*(i-1)), 449), color, -1)
 
             if len(faces) > 10:
                 cv2.putText(img, 'WARNING! More than 10 people', (10, 50), self.font, 0.8, (0, 0, 255), 2)
