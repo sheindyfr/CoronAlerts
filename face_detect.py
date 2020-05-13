@@ -12,7 +12,6 @@ class FaceDetect:
         self.rec = []
         self.x_points = []
         self.colors = []
-        self.rand_color()
 
     def run(self, file_name=0):
 
