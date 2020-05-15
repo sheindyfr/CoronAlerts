@@ -5,7 +5,7 @@
 
 * **Keep 2 meters distance** : Detecting distance between people.
 
-* **Crowded more then *K* people** : Detecting illegal crowded.
+* **Crowded more than *K* people** : Detecting illegal crowding.
 
 
 ![](example.gif)
